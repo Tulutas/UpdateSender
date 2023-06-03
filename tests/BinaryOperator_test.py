@@ -1,16 +1,19 @@
 import unittest
-
+import os 
 from modules.BinaryOperator import BinaryOperatorClass
 
 class Testing(unittest.TestCase):
-    def Missing_Filetest(self):
-        BinaryOperatorClass("./test.txt") 
-        self.assertRaises(FileNotFoundError)
-    def Read_From_Filetest(self):
+    def test_missing_file(self):
+        with self.assertRaises(FileNotFoundError):
+            BinaryOperatorClass("./NotAFile.txt")
+    def test_read_from_file(self):
         file = open("./test.txt","w")
-        file.write("Hello There \n")
+        file.write("Hello There")
         file.close()
         TestObject = BinaryOperatorClass("./test.txt") 
-        self.assertAlmostEqual(TestObject.data,b"Hello There \n")
-    
+        self.assertEqual(TestObject.data,b"Hello There")
+        if os.path.exists("./test.txt"):
+            os.remove("./test.txt")
 
+
+    

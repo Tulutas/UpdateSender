@@ -7,10 +7,10 @@ class BinaryOperatorClass:
         if os.path.exists(filePath):
             self.filepath=filePath
             self.file = open(self.filepath, "rb")
-            self.data= self.file.raw()
+            self.data= self.file.read()
             self.file.close()
         else:
-            raise FileNotFoundError
+            raise FileNotFoundError(str(filePath)+" was not found ")
 
     def Read(self):
         return self.data
