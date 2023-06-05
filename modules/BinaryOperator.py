@@ -8,12 +8,16 @@ class BinaryOperatorClass:
             self.filepath=filePath
             self.file = open(self.filepath, "rb")
             self.data= self.file.read()
+            self.datalines=self.file.readlines()
             self.file.close()
         else:
             raise FileNotFoundError(str(filePath)+" was not found ")
 
     def Read(self):
         return self.data
+    
+    def ReadDatalines(self):
+        return self.data.splitlines()
         
     def WriteToFile(self,FilePath):
         Write_File = open(FilePath, "w")

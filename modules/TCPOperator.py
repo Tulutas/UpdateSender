@@ -65,4 +65,5 @@ class TCPClass():
         self.sock.connect((remote_ip, remote_port))
     def send_data_to_all(self,data):
         self.sock.sendall(data)
-
+    def wait_for_data(self):
+        return self.sock.recv(16)
