@@ -9,11 +9,11 @@ newobject.open_tcp_socket()
 
 #newobject.start_echo_listening()
 data=b'\x00\x01\x02\x03\x04'
-newobject.connect_to_server("192.168.1.116",35000)
+newobject.connect_to_server("192.168.1.116",3500)
 
 
 DataObject=BinaryOperatorClass("./data/oakbati.hex")
-data_to_sended= DataObject.Read()
+data_to_sended= DataObject.Read()   
 data_to_send=DataObject.ReadDatalines()
 
 i=0
