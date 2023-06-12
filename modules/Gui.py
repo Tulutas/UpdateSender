@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
+from modules.TCPOperator import TCPClass
+from modules.BinaryOperator import BinaryOperatorClass
+import time 
 
 class App(tk.Frame):
     def __init__(self, master=None):
@@ -51,29 +54,7 @@ class App(tk.Frame):
         """
         Validates whether the input is a valid IP address.
         """
-        try:
-            import ipaddress
-            if '.' in ip_address:
-                segments = ip_address.split('.')
-                for segment in segments:
-                    if not segment.isdigit() or int(segment) < 0 or int(segment) > 255:
-                        return False
-                # All segments are valid integers between 0 and 255, so we can create an IPv4Address object
-                ipaddress.IPv4Address(ip_address)
-            else:
-                # If there are no periods in the input string, it may be an IPv6 or domain name representation of an IP address
-                ipaddress.ip_address(ip_address)
-            return True
-        except ValueError:
-            if len(ip_address) < 4:
-                # If the input is a single digit, it's a valid input even though it's not a complete IP address
-                return True
-            elif (len(ip_address)==3) and not ip_address.isdigit() or int(ip_address) < 0 or int(ip_address) > 255 :
-                return True
-            elif (len(ip_address)==4) and not ip_address[0:2].isdigit() or int(ip_address[0:2]) < 0 or int(ip_address[0:2]) > 255 and ip_address(3)==".":
-                return      
-            else:
-                return False
+        return True
 
     def validate_port_number(self, port_number):
         """
@@ -98,11 +79,37 @@ class App(tk.Frame):
         if not all([file_path, self.validate_ip_address(GivenIP), self.validate_port_number(GivenPort)]):
             tk.messagebox.showerror("Error", "All fields are required.")
             return
+        self.Func()
+    def Func(self):
 
+
+        newobject=TCPClass("0.0.0.0",30050)
+        newobject.open_tcp_socket()
+
+        #newobject.start_echo_listening()
+        data=b'\x00\x01\x02\x03\x04'
+        newobject.connect_to_server(self.GivenIP.get(),int(self.GivenPort.get()))
+
+
+        DataObject=BinaryOperatorClass(self.file_entry.get())
+        data_to_sended= DataObject.Read()   
+        data_to_send=DataObject.ReadDatalines()
+
+        i=0
+        process=True
+        while process: 
+            if 4*i<len(data_to_send):
+                newobject.send_data_to_all(data_to_send[4*i])
+                newobject.send_data_to_all(data_to_send[4*i+1])
+                newobject.send_data_to_all(data_to_send[4*i+2])
+                newobject.send_data_to_all(data_to_send[4*i+3])
+            else:
+                break
+            i=i+1
+            time.sleep(1000)
+        time.sleep(1000)
         # Do something with the values (e.g. print them to console)
-        print("File path:", file_path)
-        print("IP Address:", GivenIP)
-        print("Port Number:", GivenPort)
+        
 
 root = tk.Tk()
 app = App(master=root)
